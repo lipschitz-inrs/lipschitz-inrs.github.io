@@ -63,6 +63,13 @@
             margin: 1rem 0;
             text-align: center;
         }
+        .example-box {
+            background: #e8f4f8;
+            border-left: 4px solid #00a0b0;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
     </style>
 </head>
 
@@ -159,7 +166,7 @@
             </span>
 
             <span class="link-block">
-                <a href="https://anonymous.4open.science/r/iclr_lip-88B1/" class="external-link button is-normal is-rounded is-dark">
+                <a href="" class="external-link button is-normal is-rounded is-dark">
                 <span class="icon"><i class="fab fa-github"></i></span>
                 <span>Code</span>
                 </a>
@@ -352,10 +359,14 @@
                 <h4 class="title is-5">Estimating Budget K</h4>
                 <div class="content">
                     <ul>
-                        <li><b>Domain-driven:</b> Use physical constraints (e.g., max tissue strain, max cardiac contraction)</li>
-                        <li><b>Data-driven:</b> Compute oracle from representative high-resolution samples</li>
-                        <li><b>Signal-theoretic:</b> Use known bandlimits or sampling rates as conservative estimates</li>
+                        <li><b>Domain-driven:</b> Use physical constraints (e.g., max tissue strain ≈2.0 for lung registration, max cardiac contraction) or intensity bounds as interpretable upper bounds.</li>
+                        <li><b>Data-driven:</b> Compute an oracle from representative high-resolution samples based on the maximum spectral norm of the image Jacobian. See the paper for the full derivation.</li>
+                        <li><b>Signal-theoretic:</b> Use known bandlimits or sampling rates (e.g., 44.1 kHz for audio, ≈150 Hz for ECG) as conservative, noise-suppressing estimates.</li>
                     </ul>
+                </div>
+                
+                <div class="example-box">
+                    <b>Tip:</b> For noisy images, use percentile-based estimates (99.9%) rather than the absolute maximum to improve robustness.
                 </div>
             </div>
             <div class="column">
@@ -364,10 +375,20 @@
                     <ul>
                         <li>Treat allocation as a hyperparameter search centered on network expressivity</li>
                         <li>Analyze performance with respect to \(K_{min}\), the minimum imposed Lipschitz bound</li>
-                        <li>Non-uniform strategies enable balancing regularization with expressiveness</li>
+                        <li>Non-uniform strategies enable balancing regularization with expressiveness under the same global budget</li>
                     </ul>
                 </div>
             </div>
+        </div>
+        
+        <div class="content has-text-justified" style="margin-top: 1rem;">
+            <h4 class="title is-5">Key Insights</h4>
+            <ul>
+                <li>For 1-Lipschitz SDFs, non-uniform allocation performs on par with uniform—benefits emerge in general K-Lipschitz settings where the budget itself is task-dependent.</li>
+                <li>Non-uniform strategies (e.g., exponential) can improve TRE in registration while maintaining comparable folding ratio.</li>
+                <li>Performance peaks near the oracle estimate and degrades when the budget deviates significantly.</li>
+                <li>Different architectures exhibit varying degrees of self-regulation: SIREN shows superior self-regulation compared to FFNs.</li>
+            </ul>
         </div>
     </div>
 </section>
